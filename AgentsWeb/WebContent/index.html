@@ -38,7 +38,7 @@
 		                        Performative:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="performative" ng-options="performative for performative in arc.performatives" ng-model="arc.request.performative" class="form-control">
+		                        <select id="performative" ng-options="performative for performative in performatives" ng-model="selectedPerformative" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -48,7 +48,7 @@
 		                        Sender:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="sender" ng-options="agent.name for agent in arc.createdAgents.array track by agent.str" ng-model="arc.request.sender" class="form-control">
+		                        <select id="sender" ng-options="agent.id for agent in runningAgents track by $index" ng-model="selectedSender" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -58,7 +58,7 @@
 		                        Receiver:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="receiver" ng-options="agent.name for agent in arc.createdAgents.array track by agent.str" ng-model="arc.request.receivers[0]" class="form-control">
+		                        <select id="receiver" ng-options="agent.id for agent in runningAgents track by $index" ng-model="selectedReciever[0]" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -68,7 +68,7 @@
 		                        Reply to:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="replyTo" ng-options="agent.name for agent in arc.createdAgents.array track by agent.str" ng-model="arc.request.replyTo" class="form-control">
+		                        <select id="replyTo" ng-options="agent.id for agent in runningAgents track by $index" ng-model="selectedReplyTo" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -78,7 +78,7 @@
 		                        Content:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.content" class="form-control">
+		                        <input type="text" ng-model="content" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -86,7 +86,7 @@
 		                        Language:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.language" class="form-control">
+		                        <input type="text" ng-model="language" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -94,7 +94,7 @@
 		                        Encoding:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.encoding" class="form-control">
+		                        <input type="text" ng-model="encoding" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -102,7 +102,7 @@
 		                        Ontology:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.ontology" class="form-control">
+		                        <input type="text" ng-model="ontology" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -110,7 +110,7 @@
 		                        Protocol:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.protocol" class="form-control">
+		                        <input type="text" ng-model="protocol" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -118,7 +118,7 @@
 		                        Conversation ID:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.conversationId" class="form-control">
+		                        <input type="text" ng-model="conversationId" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -126,7 +126,7 @@
 		                        Reply with:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.replyWith" class="form-control">
+		                        <input type="text" ng-model="replyWith" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
@@ -134,11 +134,11 @@
 		                        Reply by:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <input type="text" ng-model="arc.request.replyBy" class="form-control">
+		                        <input type="number" ng-model="replyBy" class="form-control">
 		                    </div>
 		                </div>
 		                <div class="form-group">
-		                    <button type="button" class="btn btn-primary save" ng-click="arc.sendMessage()">Send ACL message</button>
+		                    <button type="button" class="btn btn-primary save" ng-click="sendMessage()">Send ACL message</button>
 		                </div>
 		            </form>
 				</tr>
