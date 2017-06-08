@@ -19,9 +19,9 @@ public class MDBConsumer implements MessageListener {
 	}
 	
 	@Override
-	public void onMessage(Message arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onMessage(Message message) {
+		System.out.println("hello, I have received a message");
+		System.out.println(message);
 	}
 
 }

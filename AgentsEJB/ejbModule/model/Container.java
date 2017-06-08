@@ -28,7 +28,10 @@ public class Container {
 
 	public void addRunningAgents(Agent agent) {
 		runningAgents.add(agent);
-		System.out.println(runningAgents.size());
+	}
+	
+	public void removeRunningAgent(Agent agent) {
+		runningAgents.remove(agent);
 	}
 	
 }

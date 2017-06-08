@@ -41,20 +41,17 @@ public class AgentBean implements AgentBeanRemote {
 
 	@GET
 	@Path("running")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public ArrayList<Agent> getAllRunningAgents() {
-		System.out.println(Container.getInstance().getRunningAgents().size());
-		System.out.println("RA " + Container.getInstance().getRunningAgents());
 		return Container.getInstance().getRunningAgents();
 	}
 
 	@PUT
 	@Path("running/{type}/{name}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Override
 	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
 		String host = AID.HOST_NAME;
-		System.out.println(agentType);
 		AgentType at = new AgentType(agentName, "PingPong");
 		AID aid = new AID(agentName, host, at);
 		String className = agentType.split("\\$")[1];
