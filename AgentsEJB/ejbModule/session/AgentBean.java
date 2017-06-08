@@ -17,14 +17,13 @@ import javax.ws.rs.core.MediaType;
 import model.AID;
 import model.Agent;
 import model.AgentType;
+import model.Container;
 
 @Stateless
 @LocalBean
 @Path("agents")
 public class AgentBean implements AgentBeanRemote {
 
-	ArrayList<Agent> runningAgents = new ArrayList<Agent>();
-	
 	@GET
 	@Path("test")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -44,8 +43,9 @@ public class AgentBean implements AgentBeanRemote {
 	@Path("running")
 	@Override
 	public ArrayList<Agent> getAllRunningAgents() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println(Container.getInstance().getRunningAgents().size());
+		System.out.println("RA " + Container.getInstance().getRunningAgents());
+		return Container.getInstance().getRunningAgents();
 	}
 
 	@PUT
@@ -61,10 +61,9 @@ public class AgentBean implements AgentBeanRemote {
 		
 		try {
 			Class<?> cls = Class.forName(className);
-			System.out.println("Class name " + cls.getName());
 			Constructor<?> constructor = cls.getConstructor(String.class);
-			Object object = constructor.newInstance(new Object[]{"test"});
-			runningAgents.add((Agent)object);
+			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
+			Container.getInstance().addRunningAgents((Agent) object);
 		}catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}

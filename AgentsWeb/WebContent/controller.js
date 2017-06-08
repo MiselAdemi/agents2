@@ -17,15 +17,21 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		console.log(agent);
 	}
 	//get agent types
+	$scope.getRunningAgents = function(){
+		$http.get("http://localhost:8080/AgentsWeb/rest/agents/running").
+		success(function(data){
+			$scope.runningAgents = data;
+			console.log("Running agents: " + data);
+		});
+	};
+
 	$http.get("http://localhost:8080/AgentsWeb/rest/agents/classes").
 	success(function(data){
 		$scope.agentTypes = data;
 	});
-	//get running agents
-	$http.get("http://localhost:8080/AgentsWeb/rest/agents/running").
-	success(function(data){
-		$scope.runningAgents = data;
-	});
+
+	setInterval($scope.getRunningAgents, 2000);
+
 }
 ])
 
