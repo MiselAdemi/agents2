@@ -72,8 +72,12 @@ public class Container {
 		else
 			master = System.getProperty("local");
 		
-		System.err.println("Master: " + master);
+		System.out.println("Master: " + master);
 		return master;
+	}
+	
+	public static boolean isMaster() {
+		return getLocalIP().equals(getMasterIP()) ? true : false;
 	}
 	
 }

@@ -1,8 +1,19 @@
 var agents = angular.module('agents', ['ui.bootstrap']);
+var ip = "localhost";
 
 agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 	function($scope, $http, $uibModal){
 
+	var handshake = function(){
+		$http.post("http://" + ip + ":8080/AgentsWeb/rest/ac/node");
+	}
+
+	window.onload = function(){
+		handshake();
+	}
+
+
+	//adding agent
 	$scope.addAgent = function(agent){
 		var modalInstance = $uibModal.open({
 			animation: false,
@@ -19,19 +30,19 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 
 	//get running agents
 	$scope.getRunningAgents = function(){
-		$http.get("http://localhost:8080/AgentsWeb/rest/agents/running").
+		$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/running").
 		success(function(data){
 			$scope.runningAgents = data;
 			console.log("Running agents: " + data);
 		});
 	};
 	//get agent types
-	$http.get("http://localhost:8080/AgentsWeb/rest/agents/classes").
+	$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
 	success(function(data){
 		$scope.agentTypes = data;
 	});
 	//get performative
-	$http.get("http://localhost:8080/AgentsWeb/rest/messages").
+	$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").
 	success(function(data){
 		$scope.performatives = data;
 	})
@@ -104,7 +115,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 																parseInt($scope.replyBy)
 		}
 		console.log(data);
-		$http.post("http://localhost:8080/AgentsWeb/rest/messages", data);
+		$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages", data);
 
 	}
 
@@ -122,8 +133,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 	$scope.agentName = "";
 	$scope.create = function(){
 		console.log($scope.agentName);
-		$http.put("http://localhost:8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
-		console.log("here");
+		$http.put("http://" + ip + ":8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
 		$uibModalInstance.close();
 	}
 	$scope.close = function(){

@@ -6,6 +6,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import utils.Container;
+
 @Stateless
 @Path("ac")
 @LocalBean
@@ -15,8 +17,11 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@Path("node")
 	@Override
 	public void registerMe() {
-		// TODO Auto-generated method stub
-		
+		if(!Container.isMaster()) {
+			System.out.println("Not master node, register");
+		}else {
+			System.out.println("Master node");
+		}
 	}
 
 	@GET
