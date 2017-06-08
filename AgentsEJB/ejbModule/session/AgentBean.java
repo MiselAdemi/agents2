@@ -16,8 +16,9 @@ import javax.ws.rs.core.MediaType;
 
 import model.AID;
 import model.Agent;
+import model.AgentCenter;
 import model.AgentType;
-import model.Container;
+import utils.Container;
 
 @Stateless
 @LocalBean
@@ -52,6 +53,8 @@ public class AgentBean implements AgentBeanRemote {
 	@Override
 	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
 		String host = AID.HOST_NAME;
+		AgentCenter agentCenter = null;
+		agentCenter = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
 		AID aid = new AID(agentName, host, at);
 		String className = agentType.split("\\$")[1];
@@ -60,7 +63,7 @@ public class AgentBean implements AgentBeanRemote {
 			Class<?> cls = Class.forName(className);
 			Constructor<?> constructor = cls.getConstructor(String.class);
 			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
-			Container.getInstance().addRunningAgents((Agent) object);
+			Container.getInstance().addRunningAgent(agentCenter, (Agent) object);
 		}catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
