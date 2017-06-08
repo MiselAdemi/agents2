@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="controller.js"></script>
+<title>Agents</title>
+</head>
+<body ng-app="agents">
+	<br>
+	<br>
+	<br>
+	<div ng-controller = "AgentsController">
+		<!-- Agents -->
+		<div class = "col-md-4">
+			<table class=" table-hover table-condensed table-bordered table-hover table-striped row-clickable">
+				<tr>
+					<th>Available agents</th>
+				</tr>
+				<tr class="hover" ng-repeat="agent in agentTypes" ng-click="addAgent(agent)">
+					<td>{{agent.name}}</td>
+				</tr>
+			</table>
+		</div>
+		
+		<!-- Message form -->
+		<div class="col-md-4">
+			<table class="table">
+				<tr>
+					<th>Messages</th>
+				</tr>
+				<tr>
+					<form>
+		                <div class="form-group">
+		                    <label for="performative" class="control-label">
+		                        Performative:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <select id="performative" ng-options="performative for performative in arc.performatives" ng-model="arc.request.performative" class="form-control">
+		                            <option value="">---</option>
+		                        </select>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="sender" class="control-label">
+		                        Sender:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <select id="sender" ng-options="agent.name for agent in arc.createdAgents.array track by agent.str" ng-model="arc.request.sender" class="form-control">
+		                            <option value="">---</option>
+		                        </select>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="receiver" class="control-label">
+		                        Receiver:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <select id="receiver" ng-options="agent.name for agent in arc.createdAgents.array track by agent.str" ng-model="arc.request.receivers[0]" class="form-control">
+		                            <option value="">---</option>
+		                        </select>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label for="replyTo" class="control-label">
+		                        Reply to:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <select id="replyTo" ng-options="agent.name for agent in arc.createdAgents.array track by agent.str" ng-model="arc.request.replyTo" class="form-control">
+		                            <option value="">---</option>
+		                        </select>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Content:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.content" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Language:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.language" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Encoding:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.encoding" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Ontology:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.ontology" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Protocol:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.protocol" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Conversation ID:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.conversationId" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Reply with:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.replyWith" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="control-label">
+		                        Reply by:
+		                    </label>
+		                    <div class="input-wrap">
+		                        <input type="text" ng-model="arc.request.replyBy" class="form-control">
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <button type="button" class="btn btn-primary save" ng-click="arc.sendMessage()">Send ACL message</button>
+		                </div>
+		            </form>
+				</tr>
+			</table>
+		</div>
+		
+		
+		<!-- Console and running agents -->
+		<div class="col-md-4">
+			<button class="btn btn-primary" ng-click="cc.clearConsole()">Clear console messages</button><br><br>
+			<uib-accordion>
+			    <uib-accordion-group is-open="cc.accordion.messages">
+			        <uib-accordion-heading>
+			            <div class="hover">Console messages</div>
+			        </uib-accordion-heading>
+			        <div class="console-box" scroll-glue>
+				        <div ng-repeat="message in cc.messages track by $index">
+				            <small>{{message}}</small>
+			            </div>
+			        </div>
+			    </uib-accordion-group>
+			</uib-accordion>
+			<uib-accordion>
+			    <uib-accordion-group is-open="cc.accordion.agents">
+			        <uib-accordion-heading>
+			            <div class="hover">Running server-side agents</div>
+			        </uib-accordion-heading>
+			        <div class="console-box" scroll-glue>
+				        <div ng-repeat="agent in cc.agents.array track by $index">
+				            <small>{{agent}}</small>
+			            </div>
+			        </div>
+			    </uib-accordion-group>
+			</uib-accordion>
+		</div>
+	</div>
+	
+</body>
+</html>

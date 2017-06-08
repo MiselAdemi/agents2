@@ -9,16 +9,25 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import model.AID;
 import model.Agent;
 import model.AgentType;
 
 @Stateless
-@Path("agents")
 @LocalBean
+@Path("agents")
 public class AgentBean implements AgentBeanRemote {
 
+	@GET
+	@Path("test")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String test() {
+		return "test";
+	}
+	
 	@GET
 	@Path("classes")
 	@Override
@@ -34,7 +43,7 @@ public class AgentBean implements AgentBeanRemote {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+/*
 	@PUT
 	@Path("running/{type}/{name}")
 	@Override
@@ -49,6 +58,6 @@ public class AgentBean implements AgentBeanRemote {
 	public void stopRunningAgent(@PathParam("aid")AID aid) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 }
