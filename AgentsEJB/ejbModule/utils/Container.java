@@ -7,6 +7,7 @@ import javax.ejb.Singleton;
 
 import model.Agent;
 import model.AgentCenter;
+import model.AgentType;
 
 @Singleton
 public class Container {
@@ -14,6 +15,8 @@ public class Container {
 	private static Container instance = null;
 	private ArrayList<Agent> runningAgents = new ArrayList<Agent>();
 	private HashMap<AgentCenter, ArrayList<Agent>> hosts = new HashMap<>();
+	private ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
+	
 	private Container(){
 
 	}
@@ -51,6 +54,33 @@ public class Container {
 	
 	public HashMap<AgentCenter, ArrayList<Agent>> getHosts(){
 		return hosts;
+	}
+	
+	public ArrayList<AgentType> getAgentTypes() {
+		return agentTypes;
+	}
+	
+	public void setAgentTypes(ArrayList<AgentType> agentTypes) {
+		this.agentTypes = agentTypes;
+	}
+	
+	public void addAgentType(AgentType agentType) {
+		if(!agentTypeExists(agentType))
+			this.agentTypes.add(agentType);
+	}
+	
+	private boolean agentTypeExists(AgentType agentType) {
+		boolean retVal = false;
+		ArrayList<AgentType> agentTypes = this.agentTypes;
+		
+		for(AgentType at : agentTypes) {
+			if(at.getModule().equals(agentType.getModule()) && at.getName().equals(agentType.getName())) {
+				retVal = true;
+				break;
+			}
+		}
+		
+		return retVal;
 	}
 	
 	public static String getLocalIP(){

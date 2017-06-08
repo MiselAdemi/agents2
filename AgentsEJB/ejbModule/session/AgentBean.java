@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -36,8 +35,8 @@ public class AgentBean implements AgentBeanRemote {
 	@Path("classes")
 	@Override
 	public ArrayList<AgentType> getAllAgentTypes() {
-		AgentType agentType = new AgentType();
-		return agentType.getAgentTypes();
+		new AgentType();
+		return Container.getInstance().getAgentTypes();
 	}
 
 	@GET
