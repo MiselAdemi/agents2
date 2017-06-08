@@ -1,4 +1,5 @@
 import model.Agent;
+import model.AgentCenter;
 
 public class Ping extends Agent {
 
@@ -6,8 +7,8 @@ public class Ping extends Agent {
 		super();
 	}
 	
-	public Ping(String id) {
-		super(id);
+	public Ping(String id, AgentCenter agentCenter) {
+		super(id, agentCenter);
 	}
 
 	@Override

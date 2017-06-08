@@ -34,7 +34,7 @@ public class AgentBean implements AgentBeanRemote {
 	@GET
 	@Path("classes")
 	@Override
-	public ArrayList<AgentType> getAllAgentTypes() {
+	public AgentTypes getAllAgentTypes() {
 		new AgentType();
 		return Container.getInstance().getAgentTypes();
 	}
@@ -60,8 +60,8 @@ public class AgentBean implements AgentBeanRemote {
 		
 		try {
 			Class<?> cls = Class.forName(className);
-			Constructor<?> constructor = cls.getConstructor(String.class);
-			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
+			Constructor<?> constructor = cls.getConstructor(String.class, AgentCenter.class);
+			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName, agentCenter});
 			Container.getInstance().addRunningAgent(agentCenter, (Agent) object);
 		}catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();

@@ -53,7 +53,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 	//get agent types
 	$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
 	success(function(data){
-		$scope.agentTypes = data;
+		$scope.agentTypes = data.agentTypes;
 	});
 	//get performative
 	$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").

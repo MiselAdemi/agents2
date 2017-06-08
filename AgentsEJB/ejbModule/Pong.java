@@ -1,4 +1,5 @@
 import model.Agent;
+import model.AgentCenter;
 
 public class Pong extends Agent {
 
@@ -6,8 +7,8 @@ public class Pong extends Agent {
 		super();
 	}
 	
-	public Pong(String id) {
-		super(id);
+	public Pong(String id, AgentCenter agentCenter) {
+		super(id, agentCenter);
 	}
 
 	@Override

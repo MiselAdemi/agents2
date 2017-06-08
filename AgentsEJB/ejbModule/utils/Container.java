@@ -8,6 +8,7 @@ import javax.ejb.Singleton;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
+import session.AgentTypes;
 
 @Singleton
 public class Container {
@@ -15,7 +16,7 @@ public class Container {
 	private static Container instance = null;
 	private ArrayList<Agent> runningAgents = new ArrayList<Agent>();
 	private HashMap<AgentCenter, ArrayList<Agent>> hosts = new HashMap<>();
-	private ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
+	private AgentTypes agentTypes = new AgentTypes();
 	
 	private Container(){
 
@@ -56,22 +57,22 @@ public class Container {
 		return hosts;
 	}
 	
-	public ArrayList<AgentType> getAgentTypes() {
+	public AgentTypes getAgentTypes() {
 		return agentTypes;
 	}
 	
-	public void setAgentTypes(ArrayList<AgentType> agentTypes) {
+	public void setAgentTypes(AgentTypes agentTypes) {
 		this.agentTypes = agentTypes;
 	}
 	
 	public void addAgentType(AgentType agentType) {
 		if(!agentTypeExists(agentType))
-			this.agentTypes.add(agentType);
+			this.agentTypes.getAgentTypes().add(agentType);
 	}
 	
 	private boolean agentTypeExists(AgentType agentType) {
 		boolean retVal = false;
-		ArrayList<AgentType> agentTypes = this.agentTypes;
+		ArrayList<AgentType> agentTypes = this.agentTypes.getAgentTypes();
 		
 		for(AgentType at : agentTypes) {
 			if(at.getModule().equals(agentType.getModule()) && at.getName().equals(agentType.getName())) {
