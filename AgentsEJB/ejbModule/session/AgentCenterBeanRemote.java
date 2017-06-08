@@ -11,7 +11,7 @@ public interface AgentCenterBeanRemote {
 	
 	public void registerMe(AgentCenter agentCenter);
 	
-	public void getAllSupportedAgents();
+	public void getAllSupportedAgents(String address);
 	
 	public void forwardNewAgentTypes();
 	
