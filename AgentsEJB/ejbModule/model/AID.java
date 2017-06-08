@@ -8,7 +8,7 @@ public class AID implements Serializable {
 	private String name;
 	private AgentCenter host;
 	private AgentType type;
-	public static String HOST_NAME = "agents";
+	public static String HOST_NAME = "master";
 	
 	public AID() {
 		super();

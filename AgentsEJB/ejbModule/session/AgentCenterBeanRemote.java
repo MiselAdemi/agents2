@@ -2,10 +2,14 @@ package session;
 
 import javax.ejb.Remote;
 
+import model.AgentCenter;
+
 @Remote
 public interface AgentCenterBeanRemote {
 
-	public void registerMe();
+	public boolean isMaster();
+	
+	public void registerMe(AgentCenter agentCenter);
 	
 	public void getAllSupportedAgents();
 	
