@@ -4,16 +4,25 @@ public class AID {
 
 	private String name;
 	private AgentCenter host;
-	private AgentCenter type;
+	private AgentType type;
+	public static String HOST_NAME = "agents";
 	
 	public AID() {
 		super();
 	}
 	
-	public AID(String name, AgentCenter host, AgentCenter type) {
+	public AID(String name, AgentCenter host, AgentType type) {
 		super();
 		this.name = name;
 		this.host = host;
+		this.type = type;
+	}
+	
+	public AID(String name, String agentCenterName, AgentType type) {
+		super();
+		this.name = name;
+		this.host = new AgentCenter();
+		this.host.setAlias(agentCenterName);
 		this.type = type;
 	}
 
@@ -33,11 +42,11 @@ public class AID {
 		this.host = host;
 	}
 
-	public AgentCenter getType() {
+	public AgentType getType() {
 		return type;
 	}
 
-	public void setType(AgentCenter type) {
+	public void setType(AgentType type) {
 		this.type = type;
 	}
 	

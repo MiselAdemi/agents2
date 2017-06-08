@@ -15,7 +15,6 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 			}
 		})
 		console.log(agent);
-		console.log("hello from add agent");
 	}
 	//get agent types
 	$http.get("http://localhost:8080/AgentsWeb/rest/agents/classes").
