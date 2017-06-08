@@ -1,20 +1,50 @@
-var agents = angular.module('agents', []);
+var agents = angular.module('agents', ['ui.bootstrap']);
 
-agents.controller('AgentsController', ['$scope', '$http',
-	function($scope, $http){
-	var agent = {"name": "Ping"};
-	var agent2 = {"name": "Pong"};
-	$scope.agentTypes = [agent, agent2]
+agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
+	function($scope, $http, $uibModal){
 
 	$scope.addAgent = function(agent){
+		var modalInstance = $uibModal.open({
+			animation: false,
+			templateUrl: 'agentName.html',
+			controller: 'AgentNameController',
+			resolve:{
+				agent: function(){
+					return agent;
+				}
+			}
+		})
 		console.log(agent);
 		console.log("hello from add agent");
 	}
-
-	$http.get("http://localhost:8080/AgentsWeb/rest/agents/test").
+	//get agent types
+	$http.get("http://localhost:8080/AgentsWeb/rest/agents/classes").
 	success(function(data){
-		$scope.test = data;
-		console.log($scope.test);
-	})
+		$scope.agentTypes = data;
+	});
+	//get running agents
+	$http.get("http://localhost:8080/AgentsWeb/rest/agents/running").
+	success(function(data){
+		$scope.runningAgents = data;
+	});
 }
+])
+
+
+.controller('AgentNameController', ['$scope', 'agent', '$uibModalInstance', '$http',
+	function($scope, agent, $uibModalInstance, $http){
+	console.log(agent);
+	$scope.agent = agent;
+	$scope.agentName = "";
+	$scope.create = function(){
+		console.log($scope.agentName);
+		$http.put("http://localhost:8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
+		console.log("here");
+		$uibModalInstance.close();
+	}
+	$scope.close = function(){
+		$uibModalInstance.close();
+	}
+
+}                 
 ]);

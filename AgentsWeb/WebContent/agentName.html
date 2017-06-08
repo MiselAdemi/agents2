@@ -1,0 +1,12 @@
+<div modal="showModal" close="close()">
+	<div class="modal-header">
+		<h2>{{agent.name}}</h2>
+	</div>
+	<div class="modal-body">
+		<input type="text" placeholder="Agent's name" class="form-control" ng-model="agentName" required>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="create()">Create</button>
+		<button class="btn" ng-click="close()">Close</button>
+	</div>
+</div>
