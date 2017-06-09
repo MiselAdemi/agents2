@@ -2,8 +2,10 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ejb.Singleton;
+import javax.websocket.Session;
 
 import model.Agent;
 import model.AgentCenter;
@@ -16,6 +18,7 @@ public class Container {
 	private ArrayList<Agent> runningAgents = new ArrayList<Agent>();
 	private HashMap<AgentCenter, ArrayList<Agent>> hosts = new HashMap<>();
 	private ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
+	private HashMap<AgentCenter, ArrayList<Session>> sessions = new HashMap<>();
 	
 	private Container(){
 
@@ -137,4 +140,35 @@ public class Container {
 				myA.getId().getType().getModule().equals(newA.getId().getType().getModule());
 	}
 
+	public HashMap<AgentCenter, ArrayList<Session>> getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(HashMap<AgentCenter, ArrayList<Session>> sessions) {
+		this.sessions = sessions;
+	}
+
+	public AgentCenter findAgentCenterByIP(String IP){
+		AgentCenter retVal = null;
+		for(AgentCenter ac : sessions.keySet()){
+			if(ac.getAddress().equals(IP)){
+				retVal = ac;
+				break;
+			}
+		}
+		return retVal;
+	}
+
+	public Session findSessionByID(String sessionID){
+		Session retVal = null;
+		for(Map.Entry<AgentCenter, ArrayList<Session>> session: sessions.entrySet()){
+			for(Session s: session.getValue()){
+				if(s.getId().equals(sessionID)){
+					retVal = s;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
 }
