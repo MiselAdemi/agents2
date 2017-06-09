@@ -64,9 +64,9 @@ public class AgentBean implements AgentBeanRemote {
 		Agent retVal = new Agent();
 		String host = AID.HOST_NAME;
 		AgentCenter agentCenter = new AgentCenter(host, Container.getLocalIP());
-		AgentType at = new AgentType(agentName, "MapReduce");
-		AID aid = new AID(agentName, agentCenter, at);
 		String className = agentType.split("\\$")[1];
+		AgentType at = new AgentType(agentName, className);
+		AID aid = new AID(agentName, agentCenter, at);
 		
 		try {
 			Class<?> cls = Class.forName(className);
