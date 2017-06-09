@@ -24,7 +24,7 @@ public class Container {
 
 	}
 	
-	public static Container getInstance(){
+	public static synchronized Container getInstance(){
 		if(instance == null)
 			instance = new Container();
 		return instance;
