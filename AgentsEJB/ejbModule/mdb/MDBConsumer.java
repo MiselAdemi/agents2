@@ -10,6 +10,13 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import model.ACLMessage;
 import model.AID;
@@ -54,9 +61,25 @@ public class MDBConsumer implements MessageListener {
 								for(int i=0; i<receivers.length; i++){
 									System.out.println(receivers[i].getName());
 									if(agent.getId().getName().equals(receivers[i].getName()) &&
-											receivers[i].getHost().getAddress().equals(ac.getAddress())){
-										agent.handleMessage(acl);
-									}
+											receivers[i].getHost().getAddress().equals(ac.getAddress()))
+										if(receivers[i].getHost().getAddress().equals(Container.getLocalIP())){	//agent je na trenutnom cvoru
+											agent.handleMessage(acl);
+											break;
+										}
+										else{	//agent nije na trenutnom cvoru
+											Client client = ClientBuilder.newClient();
+											WebTarget resource = client.target("http://" + receivers[i].getHost().getAddress() + "/AgentsWeb/rest/messages");
+											Builder request = resource.request();
+											Response response = request.post(Entity.json(acl));
+											System.out.println("I have sent a message to: "  + receivers[i].getHost().getAddress());
+
+											if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+												System.out.println("Sending was successfull");
+											}
+											else{
+												System.out.println("Error: " + response.getStatus());
+											}
+										}
 								}							
 							}
 						}

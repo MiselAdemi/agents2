@@ -147,8 +147,7 @@ public class WSManager {
 
 	private void runAgent(String agentType, String agentName) {
 		String host = AID.HOST_NAME;		
-		AgentCenter ac = null;
-		ac = new AgentCenter(host, Container.getLocalIP());
+		AgentCenter ac = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
 		AID aid = new AID(agentName, ac, at);
 		String className = agentType.split("\\$")[1];

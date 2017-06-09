@@ -62,8 +62,7 @@ public class AgentBean implements AgentBeanRemote {
 	@Override
 	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
 		String host = AID.HOST_NAME;
-		AgentCenter agentCenter = null;
-		agentCenter = new AgentCenter(host, Container.getLocalIP());
+		AgentCenter agentCenter = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
 		AID aid = new AID(agentName, agentCenter, at);
 		String className = agentType.split("\\$")[1];
@@ -82,6 +81,7 @@ public class AgentBean implements AgentBeanRemote {
 					Builder request = resource.request();
 					RunningAgents ra = new RunningAgents();
 					ra.setRunningAgents(Container.getInstance().getRunningAgents());
+					System.out.println("ra:" + ra);
 					Response response = request.post(Entity.json(ra));
 
 					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){

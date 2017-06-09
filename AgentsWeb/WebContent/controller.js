@@ -70,9 +70,9 @@ angular.module('agents')
 	$scope.sendMessage = function(){
 		var agentCenter = {
 				"alias":
-					"neki alias",
+					"master",
 					"address":
-						"neka adresa"
+						ip + ":" + port
 		}
 		var agentType = {
 				"name":
@@ -139,7 +139,7 @@ angular.module('agents')
 		$http.post("http://" + ipMaster + ":" + port + "/AgentsWeb/rest/ac/node", registerMe_data);
 	}
 
-	window.onload = function(){
+	$scope.onload = function(){
 		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/ac/isMaster")
 		.success(function(data){
 			console.log(data);

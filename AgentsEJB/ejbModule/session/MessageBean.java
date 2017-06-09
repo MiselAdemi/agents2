@@ -52,6 +52,9 @@ public class MessageBean implements MessageBeanRemote {
 				System.out.println("----------1---------");
 				System.out.println(message);
 				producer.send(session.createObjectMessage(message));
+				producer.close();
+				session.close();
+				con.close();
 			}
 			finally{
 				con.close();
