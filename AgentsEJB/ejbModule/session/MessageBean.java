@@ -45,12 +45,12 @@ public class MessageBean implements MessageBeanRemote {
 			final Queue target = (Queue) context.lookup("java:jboss/exported/jms/queue/mojQueue");
 			context.close();
 
-			System.out.println(factory);
-			System.out.println(target);
 			Connection con = factory.createConnection();
 			try{
 				Session session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
 				MessageProducer producer = session.createProducer(target);
+				System.out.println("----------1---------");
+				System.out.println(message);
 				producer.send(session.createObjectMessage(message));
 			}
 			finally{

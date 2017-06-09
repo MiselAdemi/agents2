@@ -2,6 +2,13 @@ package model;
 
 import java.io.Serializable;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import session.MessageBean;
+import session.MessageBeanRemote;
+
 public class Agent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -25,7 +32,20 @@ public class Agent implements Serializable {
 		this.id = id;
 	}
 	
-	public void handleMessage(){}
+	public void handleMessage(ACLMessage message){}
+
+	public MessageBeanRemote findMB(){
+		MessageBeanRemote mbr = new MessageBean();
+
+		try {
+			Context context = new InitialContext();
+			String remoteName = "java:global/AgentsEAR/AgentsEJB/MessageBean!session.MessageBean";
+			mbr = (MessageBeanRemote)context.lookup(remoteName);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+		return mbr;
+	}
 
 	public AgentCenter getAgentCenter() {
 		return agentCenter;

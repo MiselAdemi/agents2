@@ -6,6 +6,7 @@ import javax.ejb.Remote;
 
 import model.AID;
 import model.Agent;
+import model.AgentType;
 
 @Remote
 public interface AgentBeanRemote {
@@ -14,7 +15,7 @@ public interface AgentBeanRemote {
 	 * Get list of all agent types
 	 * @return
 	 */
-	public AgentTypes getAllAgentTypes();
+	public ArrayList<AgentType> getAllAgentTypes();
 	
 	/**
 	 * Get all running agents

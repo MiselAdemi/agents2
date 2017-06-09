@@ -55,11 +55,8 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void registerMe(AgentCenter agentCenter) {
-		System.out.println(agentCenter);
-		
-		if(hostExists(agentCenter)) {
-			System.out.println("Host already exists");
-		}else {
+
+		if(!hostExists(agentCenter)) {
 			System.out.println("Adding new host...");
 			Container.getInstance().addHost(agentCenter);
 			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(agentCenter.getAddress());
@@ -74,7 +71,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	
 	private void informNewHostRunningAgents(AgentCenter agentCenter, ArrayList<Agent> runningAgents) {
 		Client client = ClientBuilder.newClient();
-		WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
+		WebTarget resource = client.target("http://" + agentCenter.getAddress() + "/AgentsWeb/rest/ac/agents/running");
 		Builder request = resource.request();
 		RunningAgents ra = new RunningAgents();
 		ra.setRunningAgents(runningAgents);
@@ -90,7 +87,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 
 	private void informNewHostHosts(AgentCenter agentCenter, Set<AgentCenter> hosts) {
 		Client client = ClientBuilder.newClient();
-		WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/nodes");
+		WebTarget resource = client.target("http://" + agentCenter.getAddress() + "/AgentsWeb/rest/ac/nodes");
 		Builder request = resource.request();
 		AgentHosts ah = new AgentHosts();
 		ah.setHosts(hosts);
@@ -104,9 +101,9 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		}
 	}
 	
-	private void informNewHostAgentTypes(AgentCenter agentCenter, AgentTypes agentTypes) {
+	private void informNewHostAgentTypes(AgentCenter agentCenter, ArrayList<AgentType> agentTypes) {
 		Client client = ClientBuilder.newClient();
-		WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/agents/classes");
+		WebTarget resource = client.target("http://" + agentCenter.getAddress() + "/AgentsWeb/rest/ac/agents/classes");
 		Builder request = resource.request();
 		Response response = request.post(Entity.json(agentTypes));		
 
@@ -127,10 +124,10 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 					!host.getAddress().equals(newHostIP)){	//ukoliko nije novi cvor
 				//obavesti ostale o novom tipovima agenata
 				Client client = ClientBuilder.newClient();
-				WebTarget resource = client.target("http://" + host.getAddress() + ":8080/AgentsWeb/rest/ac/agents/classes");
+				WebTarget resource = client.target("http://" + host.getAddress() + "/AgentsWeb/rest/ac/agents/classes");
 				Builder request = resource.request();
-				AgentTypes at = new AgentTypes();
-				at.setAgentTypes(supportedAgents);
+				ArrayList<AgentType> at = new ArrayList<AgentType>();
+				at.addAll(supportedAgents);
 				Response response = request.post(Entity.json(at));
 
 				if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
@@ -152,7 +149,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 					!host.getAddress().equals(newHostIP)){	//ukoliko nije novi cvor
 				//obavesti ostale o novom cvoru
 				Client client = ClientBuilder.newClient();
-				WebTarget resource = client.target("http://" + host.getAddress() + ":8080/AgentsWeb/rest/ac/node");
+				WebTarget resource = client.target("http://" + host.getAddress() + "/AgentsWeb/rest/ac/node");
 				Builder request = resource.request();
 				Response response = request.post(Entity.json(agentCenter));
 
@@ -169,8 +166,6 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	private boolean hostExists(AgentCenter agentCenter) {
 		boolean retVal = false;
 		HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
-		
-		System.out.println("Hosts: " + hosts.toString());
 		
 		for(AgentCenter acKey : hosts.keySet()) {
 			if(acKey.getAddress().equals(agentCenter.getAddress())) {
@@ -195,8 +190,8 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		Response response = request.get();
 
 		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
-			AgentTypes at = response.readEntity(AgentTypes.class);
-			System.out.println(at.getAgentTypes().toString());
+			ArrayList<AgentType> at = response.readEntity(ArrayList.class);
+			System.out.println(at.toString());
 		}
 		else{
 			System.out.println("Error: " + response.getStatus());
@@ -208,11 +203,11 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@POST
 	@Path("agents/classes")
 	@Override
-	public void forwardNewAgentTypes(AgentTypes agentTypes) {
+	public void forwardNewAgentTypes(ArrayList<AgentType> agentTypes) {
 		System.out.println("I have received new agent types");
 		System.out.println("AT: " + agentTypes);
-		ArrayList<AgentType> myAgentTypes = Container.getInstance().getAgentTypes().getAgentTypes();
-		ArrayList<AgentType> newAgentTypes = agentTypes.getAgentTypes();
+		ArrayList<AgentType> myAgentTypes = Container.getInstance().getAgentTypes();
+		ArrayList<AgentType> newAgentTypes = agentTypes;
 		boolean typeExists = false;
 		
 		for(AgentType newAt: newAgentTypes){
@@ -228,24 +223,25 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 				Container.getInstance().addAgentType(newAt);
 			}
 		}
-		System.out.println("My list of agent types looks like this: " + Container.getInstance().getAgentTypes().getAgentTypes().toString());	 	
+		System.out.println("My list of agent types looks like this: " + Container.getInstance().getAgentTypes().toString());	 	
 	}
 
 	@POST
 	@Path("agents/running")
 	@Override
 	public void forwardRunningAgents(RunningAgents ra) {
-		System.out.println(ra.getRunningAgents().toString());
 		boolean runningAgentExists = false;
 		for(Agent newA : ra.getRunningAgents()){
 			runningAgentExists = false;
 			for(Agent myA : Container.getInstance().getRunningAgents()){
-				if(!agentsEqual(myA, newA)){
+				if(agentsEqual(myA, newA)){
 					runningAgentExists = true;
 				}
 			}
-			if(!runningAgentExists)
+			
+			if(!runningAgentExists) {
 				Container.getInstance().addRunningAgent(newA.getAgentCenter(), newA);
+			}
 		}
 	}
 

@@ -1,20 +1,21 @@
 var agents = angular.module('agents', ['ui.bootstrap']);
-var ip = "localhost";
+var ip = "127.0.0.1";
 var ipMaster = "127.0.0.1";
+var port = window.document.location.port;
 
 agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 	function($scope, $http, $uibModal){
 
 	var handshake = function(){
 		var registerMe_data = {
-				alias: "local_" + ip,
-				address: ip
+				alias: "local_" + ip + ":" + port,
+				address: ip + ":" + port
 		}
 		$http.post("http://" + ipMaster + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
 	}
 
 	window.onload = function(){
-		$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/isMaster")
+		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/ac/isMaster")
 		.success(function(data){
 			console.log(data);
 			if(data == 'true')
@@ -48,18 +49,21 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		success(function(data){
 			$scope.runningAgents = data;
 			console.log("Running agents: " + data);
+			console.log(data);
 		});
 	};
 	//get agent types
 	$scope.getAgentTypes = function(){
-		$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
+		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/agents/classes").
 		success(function(data){
-			$scope.agentTypes = data.agentTypes;
+			$scope.agentTypes = data;
+			console.log("TYPES");
+			console.log($scope.agentTypes);
 		});
 	};
 	
 	//get performative
-	$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").
+	$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/messages").
 	success(function(data){
 		$scope.performatives = data;
 	})
@@ -77,62 +81,39 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 					"module":
 						"neki modul tipa"
 		}
-		var sender = {
-				"name":
-					$scope.selectedSender.id,
-					"host":
-						agentCenter,
-						"type":
-							agentType
-		}
-		var receiver = {
-				"name":
-					$scope.selectedReciever[0].id,
-					"host":
-						agentCenter,
-						"type":
-							agentType
-		}
-		var replyTo = {
-				"name":
-					$scope.selectedReplyTo.id,
-					"host":
-						agentCenter,
-						"type":
-							agentType
-		}
 		var data = {
 				"performative":
 					$scope.selectedPerformative,
 					"sender":
-						sender,
-						"receivers":
-							[receiver],
-							"replyTo":
-								replyTo,
-								"content":
-									$scope.content,
-									"contentObject":
-									{},
-									"userArgs":
-									{},
-									"language":
-										$scope.language,
-										"encoding":
-											$scope.encoding,
-											"ontology":
-												$scope.ontology,
-												"protocol":
-													$scope.protocol,
-													"conversationId":
-														$scope.conversationId,
-														"replyWith":
-															$scope.replyWith,
-															"replyBy":
-																parseInt($scope.replyBy)
+					$scope.selectedSender.id,
+					"receivers":
+					[$scope.selectedReciever.id],
+					"replyTo":
+					$scope.selectedReplyTo.id,
+					"content":
+					$scope.content,
+					"contentObject":
+					{},
+					"userArgs":
+					{},
+					"language":
+					$scope.language,
+					"encoding":
+					$scope.encoding,
+					"ontology":
+					$scope.ontology,
+					"protocol":
+					$scope.protocol,
+					"conversationId":
+					$scope.conversationId,
+					"replyWith":
+					$scope.replyWith,
+					"replyBy":
+					parseInt($scope.replyBy)
 		}
+		
 		console.log(data);
-		$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages", data);
+		$http.post("http://" + ip + ":" + port + "/AgentsWeb/rest/messages", data);
 
 	}
 	
@@ -154,7 +135,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 	$scope.agentName = "";
 	$scope.create = function(){
 		console.log($scope.agentName);
-		$http.put("http://" + ip + ":8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
+		$http.put("http://" + ip + ":" + port + "/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
 		$uibModalInstance.close();
 	}
 	$scope.close = function(){

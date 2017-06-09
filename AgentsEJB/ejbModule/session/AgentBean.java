@@ -42,8 +42,9 @@ public class AgentBean implements AgentBeanRemote {
 	
 	@GET
 	@Path("classes")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public AgentTypes getAllAgentTypes() {
+	public ArrayList<AgentType> getAllAgentTypes() {
 		new AgentType();
 		return Container.getInstance().getAgentTypes();
 	}
@@ -77,7 +78,7 @@ public class AgentBean implements AgentBeanRemote {
 				if(agentCenter1 != null && !agentCenter1.getAddress().equals(Container.getLocalIP())){
 					System.out.println("i am here for some reason");
 					Client client = ClientBuilder.newClient();
-					WebTarget resource = client.target("http://" + agentCenter1.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
+					WebTarget resource = client.target("http://" + agentCenter1.getAddress() + "/AgentsWeb/rest/ac/agents/running");
 					Builder request = resource.request();
 					RunningAgents ra = new RunningAgents();
 					ra.setRunningAgents(Container.getInstance().getRunningAgents());
@@ -101,7 +102,7 @@ public class AgentBean implements AgentBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void stopRunningAgent(AID aid) {
-		System.out.println("Aid: " + aid);
+		System.out.println("Stopping aid: " + aid);
 		//obj.getString("");
 	}
 

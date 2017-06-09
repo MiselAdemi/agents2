@@ -16,7 +16,7 @@ public interface AgentCenterBeanRemote {
 	
 	public ArrayList<AgentType> getAllSupportedAgents(String address);
 	
-	public void forwardNewAgentTypes(AgentTypes agentTypes);
+	public void forwardNewAgentTypes(ArrayList<AgentType> agentTypes);
 	
 	public void forwardRunningAgents(RunningAgents ra);
 	
