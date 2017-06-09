@@ -16,6 +16,7 @@ public class AgentType implements Serializable {
 		Container.getInstance().addAgentType(new AgentType("Pong", "PingPong"));
 		Container.getInstance().addAgentType(new AgentType("Master", "MapReduce"));
 		Container.getInstance().addAgentType(new AgentType("Slave", "MapReduce"));
+		Container.getInstance().addAgentType(new AgentType("Initiator", "ContractNet"));
 	}
 	
 	public AgentType(String name, String module) {
