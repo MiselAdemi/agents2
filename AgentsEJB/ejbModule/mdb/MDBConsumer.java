@@ -45,9 +45,8 @@ public class MDBConsumer implements MessageListener {
 			try {
 				if(objMsg.getObject() instanceof ACLMessage){
 					ACLMessage acl = (ACLMessage)objMsg.getObject();
-					System.out.println(acl);
 					AID[] receivers = acl.getReceivers();
-					System.out.println(acl.getReceivers());
+					
 					//prodji kroz listu svih cvorova
 					HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
 					for(Map.Entry<AgentCenter, ArrayList<Agent>> entry: hosts.entrySet()){
@@ -58,7 +57,6 @@ public class MDBConsumer implements MessageListener {
 							for(Agent agent : agents){
 								//prodji kroz listu receivera
 								for(int i=0; i<receivers.length; i++){
-									System.out.println(receivers[i].getName());
 									if(agent.getId().getName().equals(receivers[i].getName()) &&
 											receivers[i].getHost().getAddress().equals(ac.getAddress()))
 										if(receivers[i].getHost().getAddress().equals(Container.getLocalIP())){	//agent je na trenutnom cvoru
@@ -70,8 +68,7 @@ public class MDBConsumer implements MessageListener {
 											WebTarget resource = client.target("http://" + receivers[i].getHost().getAddress() + "/AgentsWeb/rest/messages");
 											Builder request = resource.request();
 											Response response = request.post(Entity.json(acl));
-											System.out.println("I have sent a message to: "  + receivers[i].getHost().getAddress());
-
+										
 											if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
 												System.out.println("Sending was successfull");
 											}

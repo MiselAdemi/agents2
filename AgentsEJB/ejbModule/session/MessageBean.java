@@ -79,7 +79,6 @@ public class MessageBean implements MessageBeanRemote {
 	@Path("/loggerMessages")
 	@Override
 	public ArrayList<String> getLoggerMessages() {
-		System.out.println(Container.getInstance().getLoggerMessages());
 		return Container.getInstance().getLoggerMessages();
 	}
 

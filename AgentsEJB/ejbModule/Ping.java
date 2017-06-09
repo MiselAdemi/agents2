@@ -13,8 +13,6 @@ import utils.Container;
 public class Ping extends Agent {
 
 	private static final long serialVersionUID = 1L;
-
-	private String nodeName;
 	
 	public Ping() {
 		super();
@@ -22,6 +20,7 @@ public class Ping extends Agent {
 	
 	public Ping(AID id) {
 		super(id);
+		Container.getInstance().log("Ping created");
 	}
 
 	@Override

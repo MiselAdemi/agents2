@@ -14,14 +14,13 @@ public class Pong extends Agent {
 
 	private static final long serialVersionUID = 1L;
 
-	private String nodeName;
-
 	public Pong() {
 		super();
 	}
 
 	public Pong(AID id) {
 		super(id);
+		Container.getInstance().log("Pong created");
 	}
 
 	@Override
