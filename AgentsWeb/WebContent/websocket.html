@@ -139,12 +139,12 @@
 		<div class="col-md-4">
 			<button class="btn btn-primary" ng-click="clearConsole()">Clear console messages</button><br><br>
 			<uib-accordion>
-			    <uib-accordion-group is-open="cc.accordion.messages">
+			    <uib-accordion-group is-open="true">
 			        <uib-accordion-heading>
 			            <div class="hover">Console messages</div>
 			        </uib-accordion-heading>
 			        <div class="console-box" scroll-glue>
-				        <div ng-repeat="message in cc.messages track by $index">
+				        <div ng-repeat="message in consoleMessages track by $index">
 				            <small>{{message}}</small>
 			            </div>
 			        </div>

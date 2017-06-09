@@ -19,4 +19,8 @@ public interface MessageBeanRemote {
 	 * @return
 	 */
 	public ArrayList<String> getPerformatives();
+	
+	public ArrayList<String> getLoggerMessages();
+	
+	public void deleteLoggerMessages();
 }

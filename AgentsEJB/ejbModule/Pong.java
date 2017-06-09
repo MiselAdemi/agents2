@@ -1,6 +1,5 @@
 import java.util.HashMap;
 
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
@@ -9,6 +8,7 @@ import model.AID;
 import model.Agent;
 import model.Performative;
 import session.MessageBeanRemote;
+import utils.Container;
 
 @Stateful
 @Remote(Agent.class)
@@ -29,6 +29,8 @@ public class Pong extends Agent {
 	@Override
 	public void handleMessage(ACLMessage message) {
 		System.out.println("Message to Pong: " + message);
+		Container.getInstance().log("Message to Pong: " + message);
+		
 		ACLMessage reply = new ACLMessage(Performative.INFORM);
 		reply.addReceiver(message.getReplyTo()!=null ? message.getReplyTo():message.getSender());
 		reply.setContent("test Pong");

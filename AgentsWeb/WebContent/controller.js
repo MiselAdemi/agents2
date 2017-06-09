@@ -68,18 +68,6 @@ angular.module('agents')
 	})
 
 	$scope.sendMessage = function(){
-		var agentCenter = {
-				"alias":
-					"master",
-					"address":
-						ip + ":" + port
-		}
-		var agentType = {
-				"name":
-					"neko ime tipa",
-					"module":
-						"neki modul tipa"
-		}
 		var data = {
 				"performative":
 					$scope.selectedPerformative,
@@ -111,17 +99,29 @@ angular.module('agents')
 					parseInt($scope.replyBy)
 		}
 		
-		console.log(data);
 		$http.post("http://" + ip + ":" + port + "/AgentsWeb/rest/messages", data);
 
 	}
 	
+	// Console output
+	$scope.getConsoleMessages = function(){
+		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/messages/loggerMessages").
+		success(function(data){
+			$scope.consoleMessages = data;
+			if(!$scope.$$phase) {
+				$scope.$apply();
+			}
+		})
+	}
+	
 	$scope.clearConsole = function() {
-		
+		$http.post("http://" + ip + ":" + port + "/AgentsWeb/rest/messages/loggerMessages")
+		$scope.consoleMessages = [];
 	}
 
 	setInterval($scope.getRunningAgents, 2000);
 	setInterval($scope.getAgentTypes, 2000);
+	setInterval($scope.getConsoleMessages, 2000);
 	
 }
 ])
@@ -192,21 +192,7 @@ angular.module('agents')
 		}
 	}
 
-	//TODO: WEBSOCKET
 	$scope.sendMessage = function(){
-		var agentCenter = {
-				"alias":
-					"neki alias",
-					"address":
-						"neka adresa"
-		}
-		var agentType = {
-				"name":
-					"neko ime tipa",
-					"module":
-						"neki modul tipa"
-		}
-
 		var data = {
 				"performative":
 					$scope.selectedPerformative,
@@ -237,15 +223,27 @@ angular.module('agents')
 															"replyBy":
 																parseInt($scope.replyBy)
 		}
-		console.log(data);
 		
 		if(webSocket.readyState == 1){
 			var message = {"type":"SEND_MESSAGE", "data": data}
 			webSocket.send(JSON.stringify(message));
 		}
 	}
+	
+	// Console output
+	$scope.getConsoleMessages = function(){
+		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/messages/loggerMessages").
+		success(function(data){
+			$scope.consoleMessages = data;
+			if(!$scope.$$phase) {
+				$scope.$apply();
+			}
+		})
+	}
 
 	$scope.clearConsole = function(){
+		$http.post("http://" + ip + ":" + port + "/AgentsWeb/rest/messages/loggerMessages")
+		$scope.consoleMessages = [];
 	}
 	
 	webSocket.onopen = function(){
@@ -275,6 +273,7 @@ angular.module('agents')
 
 	setInterval($scope.getRunningAgents, 2000);
 	setInterval($scope.getAgentTypes,2000)
+	setInterval($scope.getConsoleMessages, 2000);
 
 }
 ])

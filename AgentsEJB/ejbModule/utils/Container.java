@@ -19,6 +19,7 @@ public class Container {
 	private HashMap<AgentCenter, ArrayList<Agent>> hosts = new HashMap<>();
 	private ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
 	private HashMap<AgentCenter, ArrayList<Session>> sessions = new HashMap<>();
+	private ArrayList<String> loggerMessages = new ArrayList<String>();
 	
 	private Container(){
 
@@ -185,4 +186,17 @@ public class Container {
 		}
 		return retVal;
 	}
+	
+	public ArrayList<String> getLoggerMessages() {
+		return loggerMessages;
+	}
+
+	public void setLoggerMessages(ArrayList<String> loggerMessages) {
+		this.loggerMessages = loggerMessages;
+	}
+
+	public void log(String message){
+		this.loggerMessages.add(message);
+	}
+	
 }

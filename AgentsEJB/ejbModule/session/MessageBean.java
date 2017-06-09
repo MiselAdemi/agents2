@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 
 import model.ACLMessage;
 import model.Performative;
+import utils.Container;
 
 @Stateless
 @Path("messages")
@@ -76,6 +77,21 @@ public class MessageBean implements MessageBeanRemote {
 		}
 
 		return retVal;
+	}
+	
+	@GET
+	@Path("/loggerMessages")
+	@Override
+	public ArrayList<String> getLoggerMessages() {
+		System.out.println(Container.getInstance().getLoggerMessages());
+		return Container.getInstance().getLoggerMessages();
+	}
+
+	@POST
+	@Path("/loggerMessages")
+	@Override
+	public void deleteLoggerMessages() {
+		Container.getInstance().setLoggerMessages(new ArrayList<String>());
 	}
 
 }
