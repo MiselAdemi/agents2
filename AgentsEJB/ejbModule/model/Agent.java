@@ -6,6 +6,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import session.AgentBean;
+import session.AgentBeanRemote;
 import session.MessageBean;
 import session.MessageBeanRemote;
 
@@ -53,7 +55,20 @@ public class Agent implements Serializable {
 
 	public void setAgentCenter(AgentCenter agentCenter) {
 		this.agentCenter = agentCenter;
-	};
+	}
+	
+	public AgentBeanRemote findAB(){
+		AgentBeanRemote ab = new AgentBean();
+
+		try {
+			Context context = new InitialContext();
+			String remoteName = "global/AgentsEAR/AgentsEJB/AgentBean!session.AgentBeanRemote";
+			ab = (AgentBeanRemote)context.lookup(remoteName);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+		return ab;
+	}
 	
 	@Override
 	public String toString(){

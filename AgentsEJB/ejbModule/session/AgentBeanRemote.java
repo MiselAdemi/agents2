@@ -28,7 +28,7 @@ public interface AgentBeanRemote {
 	 * @param agentType
 	 * @param agentName
 	 */
-	public void runAgent(String agentType, String agentName);
+	public Agent runAgent(String agentType, String agentName);
 
 	/**
 	 * Stop agent

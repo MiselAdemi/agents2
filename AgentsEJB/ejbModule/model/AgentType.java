@@ -14,6 +14,8 @@ public class AgentType implements Serializable {
 		super();
 		Container.getInstance().addAgentType(new AgentType("Ping", "PingPong"));
 		Container.getInstance().addAgentType(new AgentType("Pong", "PingPong"));
+		Container.getInstance().addAgentType(new AgentType("Master", "MapReduce"));
+		Container.getInstance().addAgentType(new AgentType("Slave", "MapReduce"));
 	}
 	
 	public AgentType(String name, String module) {
