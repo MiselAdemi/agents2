@@ -40,7 +40,6 @@ public class MDBConsumer implements MessageListener {
 	@Override
 	public void onMessage(Message message) {
 		//vrsi lookup agenta kome je poruka namenjena i prosledjuje mu je
-		System.out.println("************************");
 		if(message instanceof ObjectMessage){
 			ObjectMessage objMsg = (ObjectMessage)message;
 			try {

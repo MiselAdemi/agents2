@@ -33,7 +33,7 @@ public class Ping extends Agent {
 			msgToPong.setSender(getId());
 			msgToPong.addReceiver(message.getReceivers()[0]);
 			MessageBeanRemote messageBean = findMB();
-			//messageBean.sendMessage(msgToPong);
+			messageBean.sendMessage(msgToPong);
 		}
 		else if(message.getPerformative().equals(Performative.INFORM)) {
 			//reply to the original sender (if any)
@@ -43,7 +43,7 @@ public class Ping extends Agent {
 				reply.setSender(getId());
 				reply.setContent("Message received. PingPong successfully completed.");
 				MessageBeanRemote messageBean = findMB();
-				//messageBean.sendMessage(reply);
+				messageBean.sendMessage(reply);
 			}
 		}
 	}

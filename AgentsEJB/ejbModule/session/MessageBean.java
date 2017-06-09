@@ -34,11 +34,7 @@ public class MessageBean implements MessageBeanRemote {
 	@Override
 	public void sendMessage(ACLMessage message) {
 		System.out.println(message.toString());
-		//Kada agentski centar prihvati poruku od klijenta on 
-		//treba da uposli određenog agenta da izvrši zadatak. Upotrebom
-		//JMSa centar ispaljuje poruku koju prihvata MDBConsumer. 
-		//Consumer vrši lookup za agenta za kog je poruka
-		//namenjena i delegira mu poruku.
+
 		Context context;
 		try {
 			context = new InitialContext();

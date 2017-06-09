@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
@@ -32,11 +30,11 @@ public class Pong extends Agent {
 			Container.getInstance().log("Message to Pong: " + message);
 			ACLMessage reply = new ACLMessage(Performative.INFORM);
 			reply.addReceiver(message.getReplyTo()!=null ? message.getReplyTo():message.getSender());
-			reply.setSender(geti);
-			reply.setContent("test Pong");
+			reply.setSender(getId());
+			reply.setContent("Pong get message successfully");
 			MessageBeanRemote messageBean = findMB();
 			Container.getInstance().log("Pong is replying to Ping...");
-			//messageBean.sendMessage(reply);
+			messageBean.sendMessage(reply);
 		}else {
 			Container.getInstance().log("Message to Pong: " + message);
 		}
