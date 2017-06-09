@@ -106,8 +106,58 @@ public class AgentBean implements AgentBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void stopRunningAgent(AID aid) {
-		System.out.println("Stopping aid: " + aid);
-		//obj.getString("");
+		removeAgent(aid);
+	}
+
+	@DELETE
+	@Path("node/{ip}")
+	@Override
+	public void deleteNode(@PathParam("ip") String ip){
+		removeNode(ip);
+	}
+
+	@GET
+	@Path("node")
+	@Override
+	public synchronized void checkNode(){
+		//prodji kroz sve hostove
+		for(AgentCenter ac : Container.getInstance().getHosts().keySet()){
+			Container.getInstance();
+			if(!ac.getAddress().equals(Container.getLocalIP())){
+				Client client = ClientBuilder.newClient();
+				try{
+					WebTarget resource = client.target("http://" + ac.getAddress() + ":8080/AgentsWeb/rest/agents/test");
+					Builder request = resource.request();
+					Response response = request.get();
+
+					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+						System.out.println("Node " + ac.getAddress() + " is alive.");
+					}
+					else{
+						System.out.println("Dead node " + ac.getAddress() + ":" + response.getStatus());
+						removeNode(ac.getAddress());
+					}
+				}catch(Exception e){
+					System.out.println("Dead node " + ac.getAddress());
+					removeNode(ac.getAddress());
+					break;
+				}
+			}
+		}
+	}
+
+	private synchronized void removeNode(String address) {
+		try{
+			Container.getInstance().removeHostAndRunningAgents(address);
+		}
+		catch(Exception e){
+			System.out.println("Removing node...");
+		}
+	}
+
+
+	private void removeAgent(AID aid) {
+		Container.getInstance().removeRunningAgent(null, aid);
 	}
 
 }

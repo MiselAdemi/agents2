@@ -35,4 +35,8 @@ public interface AgentBeanRemote {
 	 * @param aid
 	 */
 	public void stopRunningAgent(AID aid);
+	
+	public void checkNode();
+	
+	public void deleteNode(String ip);
 }

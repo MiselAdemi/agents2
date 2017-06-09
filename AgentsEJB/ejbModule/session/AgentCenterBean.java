@@ -54,17 +54,38 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@Path("node")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public void registerMe(AgentCenter agentCenter) {
+	public void registerMe(AgentCenter ac) {
 
-		if(!hostExists(agentCenter)) {
+		if(!hostExists(ac)) {
 			System.out.println("Adding new host...");
-			Container.getInstance().addHost(agentCenter);
-			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(agentCenter.getAddress());
-			informNonMasterNodes(agentCenter);
-			informNonMasterAgentTypes(agentCenter, supportedAgents);
-			informNewHostHosts(agentCenter, Container.getInstance().getHosts().keySet());
-			informNewHostAgentTypes(agentCenter, Container.getInstance().getAgentTypes());
-			informNewHostRunningAgents(agentCenter, Container.getInstance().getRunningAgents());
+			Container.getInstance().addHost(ac);
+			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(ac.getAddress());
+
+			try{
+				informNonMasterNodes(ac);
+				informNonMasterAgentTypes(ac, supportedAgents);
+				informNewHostHosts(ac, Container.getInstance().getHosts().keySet());
+
+				informNewHostAgentTypes(ac, Container.getInstance().getAgentTypes());
+
+				informNewHostRunningAgents(ac, Container.getInstance().getRunningAgents());
+			}catch(Exception e){
+				for(AgentCenter agentCenter : Container.getInstance().getHosts().keySet()){
+					if(agentCenter!=null && !agentCenter.getAddress().equals(Container.getLocalIP())){
+						Client client = ClientBuilder.newClient();
+						WebTarget resource = client.target("http://" + agentCenter.getAddress() + "/AgentsWeb/rest/agents/node/" + ac.getAddress());
+						Builder request = resource.request();
+						Response response = request.delete();
+
+						if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+							System.out.println("Agent deleted successfully");
+						}
+						else{
+							System.out.println("Error: " + response.getStatus());
+						}
+					}
+				}
+			}
 		}
 
 	}

@@ -103,6 +103,11 @@ angular.module('agents')
 
 	}
 	
+	// Check if node is alive
+	$scope.checkNodeAlive = function(){
+		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/agents/node");
+	}
+	
 	// Console output
 	$scope.getConsoleMessages = function(){
 		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/messages/loggerMessages").
@@ -122,6 +127,7 @@ angular.module('agents')
 	setInterval($scope.getRunningAgents, 2000);
 	setInterval($scope.getAgentTypes, 2000);
 	setInterval($scope.getConsoleMessages, 2000);
+	setInterval($scope.checkNodeAlive, 10000)
 	
 }
 ])
@@ -230,6 +236,11 @@ angular.module('agents')
 		}
 	}
 	
+	// Check if node is alive
+	$scope.checkNodeAlive = function(){
+		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/agents/node");
+	}
+	
 	// Console output
 	$scope.getConsoleMessages = function(){
 		$http.get("http://" + ip + ":" + port + "/AgentsWeb/rest/messages/loggerMessages").
@@ -274,6 +285,7 @@ angular.module('agents')
 	setInterval($scope.getRunningAgents, 2000);
 	setInterval($scope.getAgentTypes,2000)
 	setInterval($scope.getConsoleMessages, 2000);
+	setInterval($scope.checkNodeAlive, 10000);
 
 }
 ])
@@ -284,7 +296,7 @@ angular.module('agents')
 	$scope.agentName = "";
 	$scope.create = function(){
 		console.log($scope.agentName);
-		$http.put("http://" + ip + ":" + port + "/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
+		$http.put("http://" + ip + ":" + port + "/AgentsWeb/rest/agents/running/Agent$" + $scope.agent.name + "/" + $scope.agentName);
 		$uibModalInstance.close();
 	}
 	$scope.close = function(){

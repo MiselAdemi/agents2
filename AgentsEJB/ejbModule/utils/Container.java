@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.ejb.Singleton;
 import javax.websocket.Session;
 
+import model.AID;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
@@ -199,4 +200,31 @@ public class Container {
 		this.loggerMessages.add(message);
 	}
 	
+	public void removeHostAndRunningAgents(String ip){
+		AgentCenter toBeRemoved = new AgentCenter();
+		for(AgentCenter ac: hosts.keySet()){
+			if(ac.getAddress().equals(ip)){
+				toBeRemoved = ac;
+				break;
+			}
+		}
+
+		if(toBeRemoved!=null){
+			ArrayList<Agent> raOnHost = hosts.get(toBeRemoved);
+			hosts.remove(toBeRemoved);
+			ArrayList<Agent> ra = runningAgents;
+			for(Agent a : raOnHost){
+				for(Agent b : ra){
+					if(agentsEqual(a, b)){
+						runningAgents.remove(a);
+					}
+				}
+			}
+		}
+	}
+
+	public void removeRunningAgent(Object ac, AID aid) {
+		// TODO
+	}
+		 
 }
