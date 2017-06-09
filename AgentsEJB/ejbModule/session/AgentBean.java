@@ -11,7 +11,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import model.AID;
 import model.Agent;
@@ -63,6 +70,25 @@ public class AgentBean implements AgentBeanRemote {
 			Constructor<?> constructor = cls.getConstructor(String.class, AgentCenter.class);
 			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName, agentCenter});
 			Container.getInstance().addRunningAgent(agentCenter, (Agent) object);
+		
+			for(AgentCenter agentCenter1 : Container.getInstance().getHosts().keySet()){
+				if(!agentCenter1.getAddress().equals(Container.getLocalIP())){
+					System.out.println("i am here for some reason");
+					Client client = ClientBuilder.newClient();
+					WebTarget resource = client.target("http://" + agentCenter1.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
+					Builder request = resource.request();
+					RunningAgents ra = new RunningAgents();
+					ra.setRunningAgents(Container.getInstance().getRunningAgents());
+					Response response = request.post(Entity.json(ra));
+
+					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+						System.out.println("Forwarding new agent was successfull");
+					}
+					else{
+						System.out.println("Error: " + response.getStatus());
+					}
+				}
+			}
 		}catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
