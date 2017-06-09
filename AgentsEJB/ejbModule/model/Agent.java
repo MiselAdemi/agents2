@@ -5,24 +5,23 @@ import java.io.Serializable;
 public class Agent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String id;
+	private AID id;
 	private AgentCenter agentCenter;
 	
 	public Agent() {
 		super();
 	}
 
-	public Agent(String id, AgentCenter agentCenter) {
+	public Agent(AID id) {
 		super();
 		this.id = id;
-		this.agentCenter = agentCenter;
 	}
 	
-	public String getId() {
+	public AID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(AID id) {
 		this.id = id;
 	}
 	

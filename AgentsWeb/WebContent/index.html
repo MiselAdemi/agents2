@@ -29,9 +29,6 @@
 		<div class="col-md-4">
 			<table class="table">
 				<tr>
-					<th>Messages</th>
-				</tr>
-				<tr>
 					<form>
 		                <div class="form-group">
 		                    <label for="performative" class="control-label">
@@ -48,7 +45,7 @@
 		                        Sender:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="sender" ng-options="agent.id for agent in runningAgents track by $index" ng-model="selectedSender" class="form-control">
+		                        <select id="sender" ng-options="agent.id.name for agent in runningAgents track by $index" ng-model="selectedSender" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -58,7 +55,7 @@
 		                        Receiver:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="receiver" ng-options="agent.id for agent in runningAgents track by $index" ng-model="selectedReciever[0]" class="form-control">
+		                        <select id="receiver" ng-options="agent.id.name for agent in runningAgents track by $index" ng-model="selectedReciever[0]" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -68,7 +65,7 @@
 		                        Reply to:
 		                    </label>
 		                    <div class="input-wrap">
-		                        <select id="replyTo" ng-options="agent.id for agent in runningAgents track by $index" ng-model="selectedReplyTo" class="form-control">
+		                        <select id="replyTo" ng-options="agent.id.name for agent in runningAgents track by $index" ng-model="selectedReplyTo" class="form-control">
 		                            <option value="">---</option>
 		                        </select>
 		                    </div>
@@ -142,13 +139,16 @@
 		                </div>
 		            </form>
 				</tr>
+				<tr>
+					<th>Messages</th>
+				</tr>
 			</table>
 		</div>
 		
 		
 		<!-- Console and running agents -->
 		<div class="col-md-4">
-			<button class="btn btn-primary" ng-click="cc.clearConsole()">Clear console messages</button><br><br>
+			<button class="btn btn-primary" ng-click="clearConsole()">Clear console messages</button><br><br>
 			<uib-accordion>
 			    <uib-accordion-group is-open="cc.accordion.messages">
 			        <uib-accordion-heading>
@@ -168,7 +168,7 @@
 			        </uib-accordion-heading>
 			        <div class="console-box" scroll-glue>
 				        <div ng-repeat="agent in runningAgents track by $index">
-				            <small>{{agent.id}}</small>
+				            <small>{{agent.id.name}}${{agent.id.host.address}}${{agent.id.type.module}}</small>
 			            </div>
 			        </div>
 			    </uib-accordion-group>

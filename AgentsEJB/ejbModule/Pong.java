@@ -1,14 +1,16 @@
+import model.AID;
 import model.Agent;
-import model.AgentCenter;
 
 public class Pong extends Agent {
+
+	private static final long serialVersionUID = 1L;
 
 	public Pong() {
 		super();
 	}
 	
-	public Pong(String id, AgentCenter agentCenter) {
-		super(id, agentCenter);
+	public Pong(AID id) {
+		super(id);
 	}
 
 	@Override

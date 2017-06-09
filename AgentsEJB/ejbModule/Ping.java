@@ -1,14 +1,16 @@
+import model.AID;
 import model.Agent;
-import model.AgentCenter;
 
 public class Ping extends Agent {
+
+	private static final long serialVersionUID = 1L;
 
 	public Ping() {
 		super();
 	}
 	
-	public Ping(String id, AgentCenter agentCenter) {
-		super(id, agentCenter);
+	public Ping(AID id) {
+		super(id);
 	}
 
 	@Override

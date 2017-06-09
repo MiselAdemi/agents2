@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -62,17 +64,17 @@ public class AgentBean implements AgentBeanRemote {
 		AgentCenter agentCenter = null;
 		agentCenter = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
-		AID aid = new AID(agentName, host, at);
+		AID aid = new AID(agentName, agentCenter, at);
 		String className = agentType.split("\\$")[1];
 		
 		try {
 			Class<?> cls = Class.forName(className);
-			Constructor<?> constructor = cls.getConstructor(String.class, AgentCenter.class);
-			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName, agentCenter});
+			Constructor<?> constructor = cls.getConstructor(AID.class);
+			Object object = constructor.newInstance(new Object[]{aid});
 			Container.getInstance().addRunningAgent(agentCenter, (Agent) object);
 		
 			for(AgentCenter agentCenter1 : Container.getInstance().getHosts().keySet()){
-				if(!agentCenter1.getAddress().equals(Container.getLocalIP())){
+				if(agentCenter1 != null && !agentCenter1.getAddress().equals(Container.getLocalIP())){
 					System.out.println("i am here for some reason");
 					Client client = ClientBuilder.newClient();
 					WebTarget resource = client.target("http://" + agentCenter1.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
@@ -94,12 +96,13 @@ public class AgentBean implements AgentBeanRemote {
 		}
 	}
 
-/*	@DELETE
-	@Path("running/{aid}")
+	@DELETE
+	@Path("running")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public void stopRunningAgent(@PathParam("aid")AID aid) {
-		// TODO Auto-generated method stub
-		
-	}*/
+	public void stopRunningAgent(AID aid) {
+		System.out.println("Aid: " + aid);
+		//obj.getString("");
+	}
 
 }

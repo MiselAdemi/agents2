@@ -6,7 +6,6 @@ import javax.ejb.Remote;
 
 import model.AID;
 import model.Agent;
-import model.AgentType;
 
 @Remote
 public interface AgentBeanRemote {
@@ -34,5 +33,5 @@ public interface AgentBeanRemote {
 	 * Stop agent
 	 * @param aid
 	 */
-	//public void stopRunningAgent(AID aid);
+	public void stopRunningAgent(AID aid);
 }

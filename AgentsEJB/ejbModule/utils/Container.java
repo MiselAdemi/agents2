@@ -44,7 +44,16 @@ public class Container {
 			hosts.put(ac, ra);
 		}
 		else{
-			hosts.get(ac).add(agent);
+			//check if agent already exists
+			ArrayList<Agent> ra = hosts.get(ac);
+			boolean agentExists = false;
+			for(Agent a : ra){
+				if(agentsEqual(a, agent)){
+					agentExists = true;
+				}
+			}
+			if(!agentExists)
+				hosts.get(ac).add(agent);
 		}
 	}
 	
@@ -115,4 +124,12 @@ public class Container {
 		return getLocalIP().equals(getMasterIP()) ? true : false;
 	}
 	
+	private boolean agentsEqual(Agent myA, Agent newA) {
+		return myA.getId().getName().equals(newA.getId().getName()) &&
+				myA.getId().getHost().getAddress().equals(newA.getId().getHost().getAddress()) &&
+				myA.getId().getHost().getAlias().equals(newA.getId().getHost().getAlias()) &&
+				myA.getId().getType().getName().equals(newA.getId().getType().getName()) &&
+				myA.getId().getType().getModule().equals(newA.getId().getType().getModule());
+	}
+
 }

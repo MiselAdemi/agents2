@@ -170,8 +170,10 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		boolean retVal = false;
 		HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
 		
-		for(AgentCenter ac_key : hosts.keySet()) {
-			if(ac_key.getAddress().equals(agentCenter.getAddress())) {
+		System.out.println("Hosts: " + hosts.toString());
+		
+		for(AgentCenter acKey : hosts.keySet()) {
+			if(acKey.getAddress().equals(agentCenter.getAddress())) {
 				retVal = true;
 				break;
 			}
@@ -238,9 +240,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		for(Agent newA : ra.getRunningAgents()){
 			runningAgentExists = false;
 			for(Agent myA : Container.getInstance().getRunningAgents()){
-				if(myA.getId().equals(newA.getId()) && 
-						myA.getAgentCenter().getAddress().equals(newA.getAgentCenter().getAddress()) &&
-						myA.getAgentCenter().getAlias().equals(newA.getAgentCenter().getAlias())){
+				if(!agentsEqual(myA, newA)){
 					runningAgentExists = true;
 				}
 			}
@@ -259,6 +259,14 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	public void checkIfAlive() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	private boolean agentsEqual(Agent myA, Agent newA) {
+		return myA.getId().getName().equals(newA.getId().getName()) &&
+				myA.getId().getHost().getAddress().equals(newA.getId().getHost().getAddress()) &&
+				myA.getId().getHost().getAlias().equals(newA.getId().getHost().getAlias()) &&
+				myA.getId().getType().getName().equals(newA.getId().getType().getName()) &&
+				myA.getId().getType().getModule().equals(newA.getId().getType().getModule());
 	}
 
 }

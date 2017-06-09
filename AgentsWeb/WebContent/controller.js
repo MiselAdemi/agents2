@@ -24,7 +24,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 				handshake();
 			}
 		})
-	}
+	};
 
 
 	//adding agent
@@ -51,10 +51,13 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		});
 	};
 	//get agent types
-	$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
-	success(function(data){
-		$scope.agentTypes = data.agentTypes;
-	});
+	$scope.getAgentTypes = function(){
+		$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
+		success(function(data){
+			$scope.agentTypes = data.agentTypes;
+		});
+	};
+	
 	//get performative
 	$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").
 	success(function(data){
@@ -132,10 +135,14 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages", data);
 
 	}
-
+	
+	$scope.clearConsole = function() {
+		
+	}
 
 	setInterval($scope.getRunningAgents, 2000);
-
+	setInterval($scope.getAgentTypes, 2000);
+	
 }
 ])
 
