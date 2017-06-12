@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,8 +25,6 @@ import utils.Container;
 public class Slave extends Agent {
 
 	private static final long serialVersionUID = 1L;
-	private Integer MINIMUM_DISTANCE = 3;
-
 
 	public Slave(){
 		super();
@@ -37,91 +37,47 @@ public class Slave extends Agent {
 	@Override
 	public void handleMessage(ACLMessage msg){
 		String documentPath = msg.getContent();
-		HashMap<String, Integer> map = new HashMap<>();
-		String line = null;
-		try{
-			FileReader fr = new FileReader(documentPath);
-			BufferedReader br = new BufferedReader(fr);
-			while((line=br.readLine())!=null){
-				Pattern p = Pattern.compile("[\\w']+");
-				Matcher m = p.matcher(line);
-				while(m.find()){
-					String word = line.substring(m.start(), m.end()).toLowerCase();
-					if(map.containsKey(word))
-						map.put(word, map.get(word)+1);
-					else if(checkLevenshteinDistance(map, word)!=null){
-						map.put(checkLevenshteinDistance(map, word),
-								map.get(checkLevenshteinDistance(map, word))+1);
-					}
-					else{
-						map.put(word, 1);
+		Map<Character, Integer> mapReduce = new HashMap<>();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(documentPath))) {
+			for(String line = br.readLine(); line != null; line = br.readLine()) {
+				line = line.toLowerCase();
+				Charset.forName("UTF-8").encode(line);
+				
+				for(int i = 0; i < line.length(); i++) {
+					Character c = line.charAt(i);
+					if(Character.isLetterOrDigit(c)) {
+						if(mapReduce.containsKey(c)) {
+							mapReduce.put(c, mapReduce.get(c) + 1);
+						}else {
+							mapReduce.put(c, 1);
+						}
 					}
 				}
 			}
-			br.close();
-		}catch(IOException e){
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println(mapReduce);
 		ACLMessage reply = new ACLMessage(Performative.INFORM);
 		reply.addReceiver(msg.getSender());
 		reply.setSender(getId());
-		reply.setContent(map.toString());
+		reply.setContent(formReply(mapReduce));
 		MessageBeanRemote mbr = findMB();
 		mbr.sendMessage(reply);
 		Container.getInstance().log(getId().getName() + " is sending reply...");
 	}
-
-	//returns true if the distance is acceptable
-	String checkLevenshteinDistance(HashMap<String, Integer> map, String rhs){
-		String retVal = null;
-		Iterator<Entry<String, Integer>> it = map.entrySet().iterator();
-
-		while(it.hasNext()){
-			Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>)it.next();
-			String lhs = pair.getKey();
-
-			int len0 = lhs.length() + 1;                                                     
-			int len1 = rhs.length() + 1;                                                     
-
-			// the array of distances                                                       
-			int[] cost = new int[len0];                                                     
-			int[] newcost = new int[len0];                                                  
-
-			// initial cost of skipping prefix in String s0                                 
-			for (int i = 0; i < len0; i++) cost[i] = i;                                     
-
-			// dynamically computing the array of distances                                  
-
-			// transformation cost for each letter in s1                                    
-			for (int j = 1; j < len1; j++) {                                                
-				// initial cost of skipping prefix in String s1                             
-				newcost[0] = j;                                                             
-
-				// transformation cost for each letter in s0                                
-				for(int i = 1; i < len0; i++) {                                             
-					// matching current letters in both strings                             
-					int match = (lhs.charAt(i - 1) == rhs.charAt(j - 1)) ? 0 : 1;             
-
-					// computing cost for each transformation                               
-					int cost_replace = cost[i - 1] + match;                                 
-					int cost_insert  = cost[i] + 1;                                         
-					int cost_delete  = newcost[i - 1] + 1;                                  
-
-					// keep minimum cost                                                    
-					newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace);
-				}                                                                           
-
-				// swap cost/newcost arrays                                                 
-				int[] swap = cost; cost = newcost; newcost = swap;                          
-			}                                                                               
-
-			// the distance is the cost for transforming all letters in both strings
-			if(cost[len0-1]<=MINIMUM_DISTANCE){
-				retVal = lhs;
-				break;
-			}
-			//it.remove();
-		}		
+	
+	private String formReply(Map<Character, Integer> mapReduce) {
+		String retVal = "Statistics:";
+		for (Map.Entry<Character, Integer> entry : mapReduce.entrySet()) {
+			retVal += "\n" + entry.getKey() + ":" + entry.getValue();
+		}
 		return retVal;
 	}
 

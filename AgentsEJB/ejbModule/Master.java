@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,8 +27,10 @@ import utils.Container;
 public class Master extends Agent {
 
 	private static final long serialVersionUID = 1L;
-	private Map<String, Integer> map = new HashMap<>();
+	//private Map<String, Integer> map = new HashMap<>();
 	private ArrayList<Agent> slaves = new ArrayList<>();
+	private Map<Character, Integer> mapReduce = new HashMap<>();
+	private int delivered = 0;
 
 	public Master(){
 		super();
@@ -45,7 +48,9 @@ public class Master extends Agent {
 
 			//get files
 			File folder = new File(directoryPath);
+			System.out.println(folder);
 			File[] documents = folder.listFiles();
+			System.out.println(documents);
 			Container.getInstance().log("Number of documents: " + documents.length);
 
 			//create slaves
@@ -68,8 +73,17 @@ public class Master extends Agent {
 			}			
 		}
 		else if(msg.getPerformative().equals(Performative.INFORM)){
-			Container.getInstance().log("[INFORM]Message to Master agent: " + msg);
-			String stringMap = msg.getContent();
+			delivered++;
+			String senderName = msg.getSender().getName();
+			Container.getInstance().log("[INFORM]Message to Master agent from: " + senderName + " : " + msg.getContent());
+			
+			parseResponse(msg.getContent());
+			
+			if(delivered == slaves.size()) {
+				Container.getInstance().log("Total statistics: " + formStatistics());
+			}
+			
+			/*String stringMap = msg.getContent();
 			Properties props = new Properties();
 			try{
 				props.load(new StringReader(stringMap.substring(1, stringMap.length()-1).replace(",", "\n")));
@@ -98,8 +112,30 @@ public class Master extends Agent {
 					++counter;
 				}
 			}
-			Container.getInstance().log("---------------");
+			Container.getInstance().log("---------------");*/
 		}		
+	}
+	
+	private void parseResponse(String input) {
+		String splits[] = input.split("\n");
+		for (int i = 1; i < splits.length; i++) {
+			Character c = splits[i].charAt(0);
+			int count = Integer.parseInt(splits[i].split(":")[1]);
+
+			if (mapReduce.containsKey(c)) {
+				mapReduce.put(c, mapReduce.get(c) + count);
+			} else {
+				mapReduce.put(c, count);
+			}
+		}
+	}
+	
+	private String formStatistics() {
+		String retVal = "MapReduce:";
+		for (Map.Entry<Character, Integer> entry : mapReduce.entrySet()) {
+			retVal += "\n" + entry.getKey() + ":" + entry.getValue();
+		}
+		return retVal;
 	}
 
 	private TreeMap<String, Integer> sortMapByValue(Map<String, Integer> map2) {
