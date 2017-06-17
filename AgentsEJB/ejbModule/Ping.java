@@ -25,25 +25,21 @@ public class Ping extends Agent {
 
 	@Override
 	public void handleMessage(ACLMessage message) {
-		Container.getInstance().log("Message to Ping: " + message);
 		
 		if(message.getPerformative().equals(Performative.REQUEST)) {
+			Container.getInstance().log("[REQUEST] to <bold>Ping</bold>: " + message.getContent());
+			
+			AID pongAid = message.getReplyTo();
 			ACLMessage msgToPong = new ACLMessage(Performative.REQUEST);
 			msgToPong.setSender(getId());
-			msgToPong.addReceiver(message.getReceivers()[0]);
+			msgToPong.addReceiver(pongAid);
+			msgToPong.setContent("Hello Pong");
 			MessageBeanRemote messageBean = findMB();
 			messageBean.sendMessage(msgToPong);
 		}
 		else if(message.getPerformative().equals(Performative.INFORM)) {
-			//reply to the original sender (if any)
-			if(message.getSender() != null || message.getReplyTo() != null){
-				ACLMessage reply = new ACLMessage(Performative.CONFIRM);
-				reply.addReceiver(message.getReplyTo()!=null? message.getReplyTo() : message.getSender());
-				reply.setSender(getId());
-				reply.setContent("Message received. PingPong successfully completed.");
-				MessageBeanRemote messageBean = findMB();
-				messageBean.sendMessage(reply);
-			}
+			Container.getInstance().log("[INFORM] to Ping: " + message.getContent());
+			Container.getInstance().log("Ping received INFORM from Pong: " + message.getContent());
 		}
 	}
 	

@@ -43,7 +43,7 @@ public class Master extends Agent {
 	@Override
 	public void handleMessage(ACLMessage msg){
 		if(msg.getPerformative().equals(Performative.REQUEST)){
-			Container.getInstance().log("[REQUEST]Message to Master agent: " + msg);
+			Container.getInstance().log("[REQUEST] to Master agent: " + msg.getContent());
 			String directoryPath = msg.getContent();
 
 			//get files
@@ -75,7 +75,7 @@ public class Master extends Agent {
 		else if(msg.getPerformative().equals(Performative.INFORM)){
 			delivered++;
 			String senderName = msg.getSender().getName();
-			Container.getInstance().log("[INFORM]Message to Master agent from: " + senderName + " : " + msg.getContent());
+			Container.getInstance().log("[INFORM] to Master agent from: " + senderName + " : " + msg.getContent());
 			
 			parseResponse(msg.getContent());
 			

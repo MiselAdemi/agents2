@@ -1,4 +1,4 @@
-var agents = angular.module('agents', ['ngRoute','ngResource', 'ui.bootstrap']);
+var agents = angular.module('agents', ['ngRoute','ngResource', 'ui.bootstrap', 'ngSanitize']);
 
 
 agents.config(['$routeProvider', function($routeProvider){

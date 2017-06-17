@@ -145,7 +145,7 @@
 			        </uib-accordion-heading>
 			        <div class="console-box" scroll-glue>
 				        <div ng-repeat="message in consoleMessages track by $index">
-				            <small>{{message}}</small>
+				            <div ng-bind-html="render(message)"></div>
 			            </div>
 			        </div>
 			    </uib-accordion-group>
@@ -156,9 +156,22 @@
 			            <div class="hover">Running server-side agents</div>
 			        </uib-accordion-heading>
 			        <div class="console-box" scroll-glue>
-				        <div ng-repeat="agent in runningAgents track by $index">
-				            <small>{{agent.id.name}}${{agent.id.host.address}}${{agent.id.type.module}}</small>
-			            </div>
+				        <table class="table table-striped">
+									    <thead>
+									      <tr>
+									        <th>Name</th>
+									        <th>Host</th>
+									        <th>Type</th>
+									      </tr>
+									    </thead>
+									    <tbody>
+									      <tr ng-repeat="agent in runningAgents track by $index">
+									        <td>{{agent.id.name}}</td>
+									        <td>{{agent.id.host.address}}</td>
+									        <td>{{agent.id.type.module}}</td>
+									      </tr>
+									    </tbody>
+									  </table>
 			        </div>
 			    </uib-accordion-group>
 			</uib-accordion>

@@ -26,16 +26,15 @@ public class Pong extends Agent {
 	@Override
 	public void handleMessage(ACLMessage message) {
 		if(message.getPerformative().equals(Performative.REQUEST)){
-			Container.getInstance().log("Message to Pong: " + message);
+			Container.getInstance().log("[REQUEST] to Pong: " + message.getContent());
+			
 			ACLMessage reply = new ACLMessage(Performative.INFORM);
-			reply.addReceiver(message.getReplyTo()!=null ? message.getReplyTo():message.getSender());
+			reply.addReceiver(message.getSender());
 			reply.setSender(getId());
-			reply.setContent("Pong get message successfully");
-			MessageBeanRemote messageBean = findMB();
+			reply.setContent("Pong get message successfully from Ping!");
 			Container.getInstance().log("Pong is replying to Ping...");
+			MessageBeanRemote messageBean = findMB();
 			messageBean.sendMessage(reply);
-		}else {
-			Container.getInstance().log("Message to Pong: " + message);
 		}
 	}
 

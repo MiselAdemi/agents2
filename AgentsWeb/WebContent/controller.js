@@ -124,6 +124,21 @@ angular.module('agents')
 		$scope.consoleMessages = [];
 	}
 
+	$scope.render = function(message) {
+		var split = message.split(" ");
+		var finalString = '';
+		for(var i = 0; i < split.length; i++) {
+		    if(split[i].startsWith("[") && split[i].endsWith("]")) {
+		    	var string = '<span class="label label-success">' + split[i] + '</span>';
+		    finalString += " " + string;
+		  }else  {
+			  finalString += " " + split[i];
+		  }
+		}
+		
+		return finalString;
+	}
+	
 	setInterval($scope.getRunningAgents, 2000);
 	setInterval($scope.getAgentTypes, 2000);
 	setInterval($scope.getConsoleMessages, 2000);
@@ -281,6 +296,20 @@ angular.module('agents')
 		}
 	}
 
+	$scope.render = function(message) {
+		var split = message.split(" ");
+		var finalString = '';
+		for(var i = 0; i < split.length; i++) {
+		    if(split[i].startsWith("[") && split[i].endsWith("]")) {
+		    	var string = '<span class="label label-success">' + split[i] + '</span>';
+		    finalString += " " + string;
+		  }else  {
+			  finalString += " " + split[i];
+		  }
+		}
+		
+		return finalString;
+	}
 
 	setInterval($scope.getRunningAgents, 2000);
 	setInterval($scope.getAgentTypes,2000)
